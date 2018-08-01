@@ -1,7 +1,8 @@
 from flask_restful import Resource, reqparse
 from data.proyecto import Proyecto
-from flask_jwt_extended import (jwt_required)
+from flask_jwt_extended import (jwt_required, get_jwt_identity)
 from services import proyecto_service as service
+from data_auth.models import UserModel
 
 from werkzeug.exceptions import BadRequest
 import json
@@ -10,36 +11,39 @@ parser = reqparse.RequestParser(bundle_errors=True)
 parser.add_argument('id')
 parser.add_argument('nombre')
 parser.add_argument('descripcion')
-parser.add_argument('correo_creador')
-parser.add_argument('id_seccion')
-parser.add_argument('svg_id')
-parser.add_argument('organizacion_id')
-parser.add_argument('padre_id')
+parser.add_argument('correoCreador')
+parser.add_argument('idSeccion')
+parser.add_argument('svgId')
+parser.add_argument('organizacionId')
+parser.add_argument('padreId')
 
 
 class AddProyecto(Resource):
     @jwt_required
     def post(self):
+        user_login = get_jwt_identity()
+
+        current_user = UserModel.find_by_login(user_login)
+        if not current_user:
+            return {'message': 'User {} doesnt exists'.format(user_login)}, 401
+
+        data = parser.parse_args()
+
+        proyecto = Proyecto()
+        proyecto.nombre = data['nombre']
+        proyecto.descripcion = data['descripcion']
+        proyecto.correoCreador = current_user.email
+        proyecto.idSeccion = data['idSeccion']
+        proyecto.svgId = data['svgId']
+        proyecto.organizacionId = current_user.organizationId
+        proyecto.padreId = data['padreId']
+
         try:
-            data = parser.parse_args()
-        except BadRequest as br:
-            br_data = br.data
-            br_message = br_data['message']
-            return {'message': '{} - {}'.format(br.description, json.dumps(br_message))}, br.code
+            proyecto.save()
+        except Exception as ex:
+            return {'message', ex.message}, 500
 
-        new_proyecto = service.persist_proyecto(proyecto_id=None,
-                                                nombre=data['nombre'],
-                                                descripcion=data['descripcion'],
-                                                correo_creador=data['correo_creador'],
-                                                id_seccion=data['id_seccion'],
-                                                svg_id=data['svg_id'],
-                                                organizacion_id=data['organizacion_id'],
-                                                padre_id=data['padre_id'])
-
-        if new_proyecto:
-            return new_proyecto.to_dict()
-        else:
-            return {'message': 'Error storing entity Proyecto'}, 500
+        return proyecto.to_dict()
 
 
 class FindRootProyectos(Resource):
