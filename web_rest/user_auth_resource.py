@@ -11,6 +11,7 @@ parser.add_argument('login', help='This field cannot be blank', required=True)
 parser.add_argument('password', help='This field cannot be blank', required=True)
 parser.add_argument('firstName')
 parser.add_argument('lastName')
+parser.add_argument('email')
 parser.add_argument('authorities', action='append')
 parser.add_argument('old_password')
 
@@ -32,7 +33,8 @@ class UserRegistration(Resource):
             login=data['login'],
             password=UserModel.generate_hash(data['password']),
             firstName=data['firstName'],
-            lastName=data['lastName']
+            lastName=data['lastName'],
+            email=data['email']
         )
 
         for authority in data['authorities']:
@@ -76,6 +78,7 @@ class Account(Resource):
                 'login': current_user.login,
                 'firstName': current_user.firstName,
                 'lastName': current_user.lastName,
+                'email': current_user.email,
                 'authorities': [authority.authority_name for authority in current_user.authorities]
             }
             return ret_user

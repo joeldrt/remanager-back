@@ -65,6 +65,7 @@ class UserModel(db.Model):
                 'password': x.password,
                 'firstName': x.firstName,
                 'lastName': x.lastName,
+                'email': x.email,
                 'authorities': [authority.authority_name for authority in x.authorities]
             }
         return list(map(lambda x: to_json(x), UserModel.query.all()))
