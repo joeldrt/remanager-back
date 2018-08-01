@@ -29,7 +29,7 @@ app.config['JWT_EXPIRES'] = datetime.timedelta(days=30)
 
 jwt = JWTManager(app)
 
-from web_rest import user_auth_resource, proyecto_resource
+from web_rest import user_auth_resource, proyecto_resource, cliente_resource
 from data_auth import models
 from data.organizacion import Organizacion
 
@@ -57,6 +57,10 @@ api.add_resource(user_auth_resource.Organization, '/api/account_organizacion')
 
 api.add_resource(proyecto_resource.FindRootProyectos, '/api/_search_root/proyectos')
 api.add_resource(proyecto_resource.FindAllByPadreId, '/api/_search_by_padreid/proyectos/<string:padre_id>')
+
+api.add_resource(cliente_resource.AddCliente, '/api/clientes')
+api.add_resource(cliente_resource.FindAllByCorreoVendedor, '/api/_search_by_cv/clientes/<string:correo_vendedor>')
+api.add_resource(cliente_resource.GetClienteById, '/api/clientes/<string:cliente_id>')
 
 
 def init_database_values():

@@ -28,7 +28,7 @@ def persist_proyecto(proyecto_id: str,
     return proyecto
 
 
-def get_all_proyectos() -> List[Proyecto]:
+def find_all_proyectos() -> List[Proyecto]:
     proyectos = [
         proyecto.to_dict() for proyecto in Proyecto.objects().all()
     ]
@@ -40,7 +40,7 @@ def get_proyecto_by_id(proyecto_id: str) -> Proyecto:
     return proyecto
 
 
-def get_all_by_padre_id(padre_id: str) -> List[Proyecto]:
+def find_all_by_padre_id(padre_id: str) -> List[Proyecto]:
     proyectos = [
         proyecto.to_dict() for proyecto in Proyecto.objects(padre_id=padre_id)
     ]

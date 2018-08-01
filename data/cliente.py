@@ -4,7 +4,7 @@ import datetime
 import data.mongo_digiall_utils as mongo_utils
 
 
-class HistoricoEstatusProducto(mongoengine.Document):
+class HistoricoEstatusProducto(mongoengine.EmbeddedDocument):
     productoId = mongoengine.StringField()
     fechaInicio = mongoengine.DateTimeField()
     tipoEstatus = mongoengine.StringField(required=True)
@@ -12,7 +12,7 @@ class HistoricoEstatusProducto(mongoengine.Document):
     tiempoDeVidaDias = mongoengine.IntField()
 
 
-class PagoProgramado(mongoengine.Document):
+class PagoProgramado(mongoengine.EmbeddedDocument):
     clienteId = mongoengine.StringField()
     productoId = mongoengine.StringField()
     fechaCreacion = mongoengine.DateTimeField(default=datetime.datetime.now())
@@ -20,7 +20,7 @@ class PagoProgramado(mongoengine.Document):
     monto = mongoengine.FloatField()
 
 
-class PagoReal(mongoengine.Document):
+class PagoReal(mongoengine.EmbeddedDocument):
     clienteId = mongoengine.StringField()
     productoId = mongoengine.StringField()
     estatusPago = mongoengine.StringField()
@@ -42,9 +42,9 @@ class Cliente(mongoengine.Document):
     organizacionId = mongoengine.StringField()
     telefono = mongoengine.StringField()
     email = mongoengine.StringField()
-    historicoProductos = mongoengine.ListField(mongoengine.EmbeddedDocumentField(HistoricoEstatusProducto))
-    pagosProgramados = mongoengine.ListField(mongoengine.EmbeddedDocumentField(PagoProgramado))
-    pagosReales = mongoengine.ListField(mongoengine.EmbeddedDocumentField(PagoReal))
+    historicoProductos = mongoengine.ListField(mongoengine.EmbeddedDocumentField(HistoricoEstatusProducto), default=[])
+    pagosProgramados = mongoengine.ListField(mongoengine.EmbeddedDocumentField(PagoProgramado), default=[])
+    pagosReales = mongoengine.ListField(mongoengine.EmbeddedDocumentField(PagoReal), default=[])
 
     def to_dict(self):
         return mongo_utils.mongo_to_dict(self)

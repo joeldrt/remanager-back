@@ -44,7 +44,7 @@ class AddProyecto(Resource):
 
 class FindRootProyectos(Resource):
     def get(self):
-        proyectos = service.get_all_proyectos()
+        proyectos = service.find_all_proyectos()
         return proyectos
 
 
@@ -93,5 +93,5 @@ class EditProyecto(Resource):
 class FindAllByPadreId(Resource):
     @jwt_required
     def get(self, padre_id):
-        proyectos = service.get_all_by_padre_id(padre_id)
+        proyectos = service.find_all_by_padre_id(padre_id)
         return proyectos

@@ -2,7 +2,7 @@ from typing import List
 
 from data.organizacion import Organizacion
 
-def get_all_organizaciones() -> List[Organizacion]:
+def find_all_organizaciones() -> List[Organizacion]:
     organizacion = [
         organizacion.to_dict() for organizacion in Organizacion.objects().all()
     ]

@@ -7,8 +7,8 @@ from flask_jwt_extended import (create_access_token,
 from services import organizacion_service as organization_service
 
 parser = reqparse.RequestParser(bundle_errors=True)
-parser.add_argument('login', help='This field cannot be blank', required=True)
-parser.add_argument('password', help='This field cannot be blank', required=True)
+parser.add_argument('login')
+parser.add_argument('password')
 parser.add_argument('firstName')
 parser.add_argument('lastName')
 parser.add_argument('email')
@@ -82,6 +82,22 @@ class Account(Resource):
                 'authorities': [authority.authority_name for authority in current_user.authorities]
             }
             return ret_user
+
+    @jwt_required
+    def put(self):
+        data = parser.parse_args()
+        user_to_edit = UserModel.find_by_login(data['login'])
+        if not user_to_edit:
+            return {'message': 'User {} doesnt exists'.format(data['login'])}
+        else:
+            user_to_edit.firstName = data['firstName']
+            user_to_edit.lastName = data['lastName']
+            try:
+                user_to_edit.save_to_db()
+
+                return {'message': 'User {} was edited'.format(user_to_edit.login)}
+            except:
+                return {'message': 'Something went wrong'}, 500
 
 
 class Organization(Resource):
