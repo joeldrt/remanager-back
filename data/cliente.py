@@ -13,7 +13,6 @@ class HistoricoEstatusProducto(mongoengine.EmbeddedDocument):
 
 
 class PagoProgramado(mongoengine.EmbeddedDocument):
-    clienteId = mongoengine.StringField()
     productoId = mongoengine.StringField()
     fechaCreacion = mongoengine.DateTimeField(default=datetime.datetime.now())
     fechaPago = mongoengine.DateTimeField()
@@ -21,7 +20,6 @@ class PagoProgramado(mongoengine.EmbeddedDocument):
 
 
 class PagoReal(mongoengine.EmbeddedDocument):
-    clienteId = mongoengine.StringField()
     productoId = mongoengine.StringField()
     estatusPago = mongoengine.StringField()
     fechaRecepcion = mongoengine.DateTimeField()

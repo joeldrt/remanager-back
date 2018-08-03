@@ -25,11 +25,11 @@ db = SQLAlchemy(app)
 app.config['JWT_SECRET_KEY'] = 'Th15157h33nD'
 app.config['JWT_BLACKLIST_ENABLES'] = True
 app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access']
-app.config['JWT_EXPIRES'] = datetime.timedelta(days=30)
+app.config['JWT_EXPIRATION_DELTA'] = datetime.timedelta(days=30)
 
 jwt = JWTManager(app)
 
-from web_rest import user_auth_resource, proyecto_resource, cliente_resource
+from web_rest import user_auth_resource, proyecto_resource, cliente_resource, svg_resource
 from data_auth import models
 from data.organizacion import Organizacion
 
@@ -61,6 +61,8 @@ api.add_resource(proyecto_resource.FindAllByPadreId, '/api/_search_by_padreid/pr
 api.add_resource(cliente_resource.AddCliente, '/api/clientes')
 api.add_resource(cliente_resource.FindAllByCorreoVendedor, '/api/_search_by_cv/clientes/<string:correo_vendedor>')
 api.add_resource(cliente_resource.GetClienteById, '/api/clientes/<string:cliente_id>')
+
+api.add_resource(svg_resource.AddSvg, '/api/svgs')
 
 
 def init_database_values():
