@@ -25,11 +25,12 @@ db = SQLAlchemy(app)
 app.config['JWT_SECRET_KEY'] = 'Th15157h33nD'
 app.config['JWT_BLACKLIST_ENABLES'] = True
 app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access']
-app.config['JWT_EXPIRATION_DELTA'] = datetime.timedelta(days=30)
 
 jwt = JWTManager(app)
 
-from web_rest import user_auth_resource, proyecto_resource, cliente_resource, svg_resource
+from web_rest import user_auth_resource, proyecto_resource, cliente_resource,\
+    svg_resource, producto_resource
+from web_static import static_file_server
 from data_auth import models
 from data.organizacion import Organizacion
 
@@ -56,13 +57,18 @@ api.add_resource(user_auth_resource.Account, '/api/account')
 api.add_resource(user_auth_resource.Organization, '/api/account_organizacion')
 
 api.add_resource(proyecto_resource.FindRootProyectos, '/api/_search_root/proyectos')
-api.add_resource(proyecto_resource.FindAllByPadreId, '/api/_search_by_padreid/proyectos/<string:padre_id>')
+api.add_resource(proyecto_resource.FindAllProyectosByPadreId, '/api/_search_by_padreid/proyectos/<string:padre_id>')
 
 api.add_resource(cliente_resource.AddCliente, '/api/clientes')
-api.add_resource(cliente_resource.FindAllByCorreoVendedor, '/api/_search_by_cv/clientes/<string:correo_vendedor>')
+api.add_resource(cliente_resource.FindAllClientesByCorreoVendedor, '/api/_search_by_cv/clientes/<string:correo_vendedor>')
 api.add_resource(cliente_resource.GetClienteById, '/api/clientes/<string:cliente_id>')
 
 api.add_resource(svg_resource.AddSvg, '/api/svgs')
+api.add_resource(svg_resource.GetSvgById, '/api/svgs/<string:svg_id>')
+
+api.add_resource(producto_resource.FindAllProductosByProyectoId, '/api/_search_by_proyectoid/productos/<string:proyecto_id>')
+api.add_resource(producto_resource.GetProductoById, '/api/productos/<string:producto_id>')
+api.add_resource(producto_resource.FindAllProductos, '/api/productos/')
 
 
 def init_database_values():

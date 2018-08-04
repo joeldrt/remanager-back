@@ -11,6 +11,13 @@ def find_all_proyectos() -> List[Proyecto]:
     return proyectos
 
 
+def find_root_proyectos() -> List[Proyecto]:
+    proyectos = [
+        proyecto.to_dict() for proyecto in Proyecto.objects(padreId='root')
+    ]
+    return proyectos
+
+
 def get_proyecto_by_id(proyecto_id: str) -> Proyecto:
     proyecto = Proyecto.objects().get(id=proyecto_id)
     return proyecto

@@ -2,8 +2,6 @@ from flask_restful import Resource, reqparse, request
 from data.svg import Svg, Poligono, Punto
 from flask_jwt_extended import (jwt_required, get_jwt_identity)
 
-import json
-
 parser = reqparse.RequestParser(bundle_errors=True)
 parser.add_argument('id')
 parser.add_argument('nombre')
@@ -29,4 +27,11 @@ class AddSvg(Resource):
         except Exception as ex:
             return {'message', ex.message}, 500
 
+        return svg.to_dict()
+
+
+class GetSvgById(Resource):
+    @jwt_required
+    def get(self, svg_id):
+        svg = Svg.objects().get(id=svg_id)
         return svg.to_dict()

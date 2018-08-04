@@ -48,7 +48,7 @@ class AddProyecto(Resource):
 
 class FindRootProyectos(Resource):
     def get(self):
-        proyectos = service.find_all_proyectos()
+        proyectos = service.find_root_proyectos()
         return proyectos
 
 
@@ -94,7 +94,7 @@ class EditProyecto(Resource):
             return {'message', 'Unable to edit Proyecto {}'.format(proyecto.id)}, 500
 
 
-class FindAllByPadreId(Resource):
+class FindAllProyectosByPadreId(Resource):
     @jwt_required
     def get(self, padre_id):
         proyectos = service.find_all_by_padre_id(padre_id)

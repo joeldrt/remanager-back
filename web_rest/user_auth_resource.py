@@ -6,6 +6,8 @@ from flask_jwt_extended import (create_access_token,
 
 from services import organizacion_service as organization_service
 
+import datetime
+
 parser = reqparse.RequestParser(bundle_errors=True)
 parser.add_argument('login')
 parser.add_argument('password')
@@ -58,7 +60,8 @@ class UserLogin(Resource):
             return {'message': 'User {} doesnt exists'.format(data['login'])}, 401
 
         if UserModel.verify_hash(data['password'], current_user.password):
-            access_token = create_access_token(identity=current_user)
+            expires = datetime.timedelta(days=1)
+            access_token = create_access_token(identity=current_user, expires_delta=expires)
             return {
                 'id_token': access_token
             }

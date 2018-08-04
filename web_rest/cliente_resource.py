@@ -4,8 +4,6 @@ from flask_jwt_extended import (jwt_required, get_jwt_identity)
 from services import cliente_service as service
 from data_auth.models import UserModel
 
-from werkzeug.exceptions import BadRequest
-import json
 import datetime
 
 parser = reqparse.RequestParser(bundle_errors=True)
@@ -17,9 +15,6 @@ parser.add_argument('fechaNacimiento')
 parser.add_argument('organizacionId')
 parser.add_argument('telefono')
 parser.add_argument('email')
-parser.add_argument('historicoProductos', action='append')
-parser.add_argument('pagosProgramados', action='append')
-parser.add_argument('pagosReales', action='append')
 
 
 class AddCliente(Resource):
@@ -51,7 +46,7 @@ class AddCliente(Resource):
         return cliente.to_dict()
 
 
-class FindAllByCorreoVendedor(Resource):
+class FindAllClientesByCorreoVendedor(Resource):
     @jwt_required
     def get(self, correo_vendedor):
         clientes = service.find_clientes_by_correo_vendedor(correo_vendedor)
