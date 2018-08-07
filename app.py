@@ -29,7 +29,7 @@ app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access']
 jwt = JWTManager(app)
 
 from web_rest import user_auth_resource, proyecto_resource, cliente_resource,\
-    svg_resource, producto_resource
+    svg_resource, producto_resource, contrato_resource
 from web_static import static_file_server
 from data_auth import models
 from data.organizacion import Organizacion
@@ -69,6 +69,15 @@ api.add_resource(svg_resource.GetSvgById, '/api/svgs/<string:svg_id>')
 api.add_resource(producto_resource.FindAllProductosByProyectoId, '/api/_search_by_proyectoid/productos/<string:proyecto_id>')
 api.add_resource(producto_resource.GetProductoById, '/api/productos/<string:producto_id>')
 api.add_resource(producto_resource.FindAllProductos, '/api/productos/')
+
+api.add_resource(contrato_resource.AddContrato, '/api/contratos')
+api.add_resource(contrato_resource.FindAllContratos, '/api/contratos/all/')
+api.add_resource(contrato_resource.GetLastContratoForProductoId, '/api/contratos/_by_producto_id/recent/<string:producto_id>')
+api.add_resource(contrato_resource.FindAllContratosForProductoId, '/api/contratos/_by_producto_id/all/<string:producto_id>')
+api.add_resource(contrato_resource.AddPagoReal, '/api/contratos/_add_pago_real/<string:contrato_id>')
+api.add_resource(contrato_resource.AddPagoProgramado, '/api/contratos/_add_pago_programado/<string:contrato_id>')
+
+api.add_resource(static_file_server.UploadFiles, '/api/file/upload')
 
 
 def init_database_values():
