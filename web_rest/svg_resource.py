@@ -18,7 +18,7 @@ parser.add_argument('poligonos', type=dict, action='append')
 class AddSvg(Resource):
     @jwt_required
     def post(self):
-        data = request.data
+        data = request.data.decode('utf-8')
 
         svg = Svg.from_json(data)
 
