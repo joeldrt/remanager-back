@@ -76,6 +76,7 @@ api.add_resource(contrato_resource.GetLastContratoForProductoId, '/api/contratos
 api.add_resource(contrato_resource.FindAllContratosForProductoId, '/api/contratos/_by_producto_id/all/<string:producto_id>')
 api.add_resource(contrato_resource.AddPagoReal, '/api/contratos/_add_pago_real/<string:contrato_id>')
 api.add_resource(contrato_resource.AddPagoProgramado, '/api/contratos/_add_pago_programado/<string:contrato_id>')
+api.add_resource(contrato_resource.FindContratosForClienteId, '/api/contratos/_by_cliente_id/<string:cliente_id>')
 
 api.add_resource(static_file_server.UploadFiles, '/api/file/upload')
 

@@ -174,3 +174,10 @@ class FindAllContratosForProductoId(Resource):
     def get(self, producto_id):
         contratos = contrato_service.find_all_contratos_for_producto_id(producto_id)
         return contratos
+
+
+class FindContratosForClienteId(Resource):
+    @jwt_required
+    def get(self, cliente_id):
+        contratos = contrato_service.find_all_for_cliente_id(cliente_id)
+        return contratos

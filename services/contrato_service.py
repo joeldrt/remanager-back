@@ -65,3 +65,10 @@ def find_all_contratos_for_producto_id(producto_id: str) -> List[Contrato]:
 def get_contrato_by_id(contrato_id: str) -> Contrato:
     contrato = Contrato.objects().get(id=contrato_id)
     return contrato
+
+
+def find_all_for_cliente_id(cliente_id: str) -> List[Contrato]:
+    contratos = [
+        contrato.to_dict() for contrato in Contrato.objects(clienteId=cliente_id)
+    ]
+    return contratos

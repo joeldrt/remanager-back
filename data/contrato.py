@@ -20,6 +20,8 @@ class PagoProgramado(mongoengine.EmbeddedDocument):
 class Contrato(mongoengine.Document):
     fechaCreacion = mongoengine.DateTimeField(default=datetime.datetime.now())
 
+    activo = mongoengine.BooleanField(default=True)
+
     tipo = mongoengine.StringField()
 
     clienteId = mongoengine.StringField()
