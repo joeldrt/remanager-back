@@ -85,7 +85,7 @@ class AddContrato(Resource):
                 contrato.productoId,
                 contrato_service.map_estatus_tipo_de_contrato(contrato.tipo))
         except Exception as ex:
-            return {'message': ex.message}, 500
+            return {'message': str(ex)}, 500
 
         return contrato.to_dict()
 
@@ -97,7 +97,7 @@ class AddPagoProgramado(Resource):
         try:
             contrato = contrato_service.get_contrato_by_id(contrato_id)
         except Exception as ex:
-            return {'message': ex.message}, 500
+            return {'message': str(ex)}, 500
 
         data = pago_programado_parser.parse_args()
 
@@ -113,7 +113,7 @@ class AddPagoProgramado(Resource):
         try:
             contrato.save()
         except Exception as ex:
-            return {'message': ex.message}, 500
+            return {'message': str(ex)}, 500
 
         return contrato.to_dict()
 
@@ -125,7 +125,7 @@ class AddPagoReal(Resource):
         try:
             contrato = contrato_service.get_contrato_by_id(contrato_id)
         except Exception as ex:
-            return {'message': ex.message}, 500
+            return {'message': str(ex)}, 500
 
         data = pago_real_parser.parse_args()
 
@@ -140,7 +140,7 @@ class AddPagoReal(Resource):
         try:
             contrato.save()
         except Exception as ex:
-            return {'message': ex.message}, 500
+            return {'message': str(ex)}, 500
 
         return contrato.to_dict()
 
@@ -165,7 +165,7 @@ class GetLastContratoForProductoId(Resource):
         try:
             contrato = contrato_service.get_last_contrato_for_producto_id(producto_id)
         except Exception as ex:
-            return {'message': ex.message}, 500
+            return {'message': str(ex)}, 500
         return contrato.to_dict()
 
 
