@@ -181,3 +181,13 @@ class FindContratosForClienteId(Resource):
     def get(self, cliente_id):
         contratos = contrato_service.find_all_for_cliente_id(cliente_id)
         return contratos
+
+
+class GetContratoByContratoId(Resource):
+    @jwt_required
+    def get(self, contrato_id):
+        try:
+            contrato = contrato_service.get_contrato_by_id(contrato_id)
+        except Exception as ex:
+            return {'message': str(ex)}, 500
+        return contrato.to_dict()
