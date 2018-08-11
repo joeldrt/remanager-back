@@ -81,7 +81,7 @@ class AddContrato(Resource):
 
         try:
             contrato.save()
-            if contrato.tipo is not 'CORRIDA':
+            if contrato.tipo != 'CORRIDA':
                 producto_service.update_producto_estatus(
                     contrato.productoId,
                     contrato_service.map_estatus_tipo_de_contrato(contrato.tipo))
