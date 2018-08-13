@@ -11,10 +11,17 @@ upload_parser = reqparse.RequestParser()
 upload_parser.add_argument('folder', help='folder must be provided', required=True, type=str)
 upload_parser.add_argument('files', action='append', type=dict, required=True)
 
+web_folder_name = 'archivo'
 
-@app.route('/archivo/<string:request_folder>/<string:file_name>')
+
+@app.route('/{}/<string:request_folder>/<string:file_name>'.format(web_folder_name))
 def dispatch_file(request_folder, file_name):
     return send_from_directory('static/{}'.format(request_folder), file_name)
+
+
+@app.route('/{}/<string:login>/fotos/<string:file_name>'.format(web_folder_name))
+def dispatch_profile_picture(login, file_name):
+    return send_from_directory('static/{}/fotos'.format(login), file_name)
 
 
 class UploadFiles(Resource):
@@ -41,7 +48,7 @@ class UploadFiles(Resource):
             saving_file.write(base64.decodebytes(base64_data.encode()))
             saving_file.close()
 
-            saved_file_name = '{}/{}'.format(folder, filename)
+            saved_file_name = '{}/{}/{}'.format(web_folder_name, folder, filename)
 
             added_files.append(saved_file_name)
 

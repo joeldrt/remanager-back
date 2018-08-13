@@ -28,7 +28,7 @@ app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access']
 
 jwt = JWTManager(app)
 
-from web_rest import user_auth_resource, proyecto_resource, cliente_resource,\
+from web_rest import user_auth_resource, user_extra_resource, proyecto_resource, cliente_resource,\
     svg_resource, producto_resource, contrato_resource
 from web_static import static_file_server
 from data_auth import models
@@ -55,6 +55,10 @@ def user_identity_lookup(user):
 api.add_resource(user_auth_resource.UserLogin, '/api/authenticate')
 api.add_resource(user_auth_resource.Account, '/api/account')
 api.add_resource(user_auth_resource.Organization, '/api/account_organizacion')
+
+api.add_resource(user_extra_resource.GetUserExtra, '/api/user_extra')
+api.add_resource(user_extra_resource.UpdateUserPictures, '/api/user_extra/pictures')
+api.add_resource(user_extra_resource.UpdateUserProfilePic, '/api/user_extra/profile_pic')
 
 api.add_resource(proyecto_resource.FindRootProyectos, '/api/_search_root/proyectos')
 api.add_resource(proyecto_resource.FindAllProyectosByPadreId, '/api/_search_by_padreid/proyectos/<string:padre_id>')
