@@ -31,7 +31,7 @@ class Producto(mongoengine.Document):
     archivos = mongoengine.ListField(mongoengine.StringField())
 
     def to_dict(self):
-        return mongo_utils.mongo_to_dict(self)
+        return mongo_utils.mongo_to_dict_1(self)
 
     meta = {
         'db_alias': 'core',

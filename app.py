@@ -6,7 +6,6 @@ from flask_jwt_extended import JWTManager
 
 import data.mongo_setup as mongo_setup
 import logging
-import datetime
 
 app = Flask(__name__, static_url_path='/static')
 handler = logging.FileHandler('remanager.log')
@@ -63,9 +62,10 @@ api.add_resource(user_extra_resource.UpdateUserProfilePic, '/api/user_extra/prof
 api.add_resource(proyecto_resource.FindRootProyectos, '/api/_search_root/proyectos')
 api.add_resource(proyecto_resource.FindAllProyectosByPadreId, '/api/_search_by_padreid/proyectos/<string:padre_id>')
 
-api.add_resource(cliente_resource.AddCliente, '/api/clientes')
-api.add_resource(cliente_resource.FindAllClientesByCorreoVendedor, '/api/_search_by_cv/clientes/<string:correo_vendedor>')
+api.add_resource(cliente_resource.AgregarCliente, '/api/clientes')
+api.add_resource(cliente_resource.FindAllClientesByCorreoVendedor, '/api/_search_by_cv/clientes')
 api.add_resource(cliente_resource.GetClienteById, '/api/clientes/<string:cliente_id>')
+api.add_resource(cliente_resource.EditarCliente, '/api/clientes/<string:cliente_id>')
 
 api.add_resource(svg_resource.AddSvg, '/api/svgs')
 api.add_resource(svg_resource.GetSvgById, '/api/svgs/<string:svg_id>')

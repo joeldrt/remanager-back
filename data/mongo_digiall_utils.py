@@ -27,9 +27,13 @@ def mongo_to_dict_1(obj):
         elif isinstance(obj._fields[field_name], IntField):
             return_data.append((field_name, int(data)))
         elif isinstance(obj._fields[field_name], ListField):
-            return_data.append((field_name, data))
+            return_data.append((field_name, list_field_to_dict(data)))
         elif isinstance(obj._fields[field_name], EmbeddedDocumentField):
-            return_data.append((field_name, mongo_to_dict(data)))
+            return_data.append((field_name, mongo_to_dict_1(data)))
+        elif isinstance(obj._fields[field_name], DecimalField):
+            return_data.append((field_name, float(data)))
+        elif isinstance(obj._fields[field_name], BooleanField):
+            return_data.append((field_name, bool(data)))
 
     return dict(return_data)
 
@@ -60,9 +64,10 @@ def mongo_to_dict(obj, exclude_fields=[]):
         elif isinstance(obj._fields[field_name], DictField):
             return_data.append((field_name, data))
         else:
-            return_data.append((field_name, mongo_to_python_type(obj._fields[field_name],data)))
+            return_data.append((field_name, mongo_to_python_type(obj._fields[field_name], data)))
 
     return dict(return_data)
+
 
 def list_field_to_dict(list_field):
 
@@ -70,12 +75,12 @@ def list_field_to_dict(list_field):
 
     for item in list_field:
         if isinstance(item, EmbeddedDocument):
-            return_data.append(mongo_to_dict(item,[]))
+            return_data.append(mongo_to_dict(item, []))
         else:
             return_data.append(mongo_to_python_type(item,item))
 
-
     return return_data
+
 
 def mongo_to_python_type(field,data):
 

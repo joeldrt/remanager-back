@@ -30,7 +30,7 @@ class Svg(mongoengine.Document):
     poligonos = mongoengine.ListField(mongoengine.EmbeddedDocumentField(Poligono))
 
     def to_dict(self):
-        return mongo_utils.mongo_to_dict(self)
+        return mongo_utils.mongo_to_dict_1(self)
 
     meta = {
         'db_alias': 'core',

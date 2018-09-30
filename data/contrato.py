@@ -36,7 +36,7 @@ class Contrato(mongoengine.Document):
     pagosReales = mongoengine.ListField(mongoengine.EmbeddedDocumentField(PagoReal))
 
     def to_dict(self):
-        return mongo_utils.mongo_to_dict(self)
+        return mongo_utils.mongo_to_dict_1(self)
 
     @mongoengine.queryset_manager
     def objects(doc_cls, queryset):
