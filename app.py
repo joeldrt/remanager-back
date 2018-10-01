@@ -63,9 +63,12 @@ api.add_resource(proyecto_resource.FindRootProyectos, '/api/_search_root/proyect
 api.add_resource(proyecto_resource.FindAllProyectosByPadreId, '/api/_search_by_padreid/proyectos/<string:padre_id>')
 
 api.add_resource(cliente_resource.AgregarCliente, '/api/clientes')
-api.add_resource(cliente_resource.FindAllClientesByCorreoVendedor, '/api/_search_by_cv/clientes')
-api.add_resource(cliente_resource.GetClienteById, '/api/clientes/<string:cliente_id>')
+api.add_resource(cliente_resource.ObtenerClientePorId, '/api/clientes/<string:cliente_id>')
 api.add_resource(cliente_resource.EditarCliente, '/api/clientes/<string:cliente_id>')
+api.add_resource(cliente_resource.BorrarCliente, '/api/clientes/<string:cliente_id>')
+api.add_resource(cliente_resource.ObtenerResumenContratosPorCliente, '/api/clientes/<string:cliente_id>/contratos')
+api.add_resource(cliente_resource.ObtenerClientesPorVendedor, '/api/_search_by_cv/clientes')
+
 
 api.add_resource(svg_resource.AddSvg, '/api/svgs')
 api.add_resource(svg_resource.GetSvgById, '/api/svgs/<string:svg_id>')

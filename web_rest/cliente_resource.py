@@ -38,7 +38,7 @@ class AgregarCliente(Resource):
                                                     nombre=nombre,
                                                     apellidos=apellidos,
                                                     direccion=direccion,
-                                                    fechaNacimiento=fechaNacimiento,
+                                                    fecha_nacimiento=fechaNacimiento,
                                                     telefono=telefono,
                                                     email=email)
         except Exception as ex:
@@ -57,6 +57,23 @@ editar_cliente_parser.add_argument('fechaNacimiento')
 editar_cliente_parser.add_argument('telefono', required=True)
 
 
+class ObtenerClientePorId(Resource):
+    @jwt_required
+    def get(self, cliente_id):
+        vendedor_login = get_jwt_identity()
+
+        vendedor = UserModel.find_by_login(vendedor_login)
+        if not vendedor:
+            return {'message': 'Vendedor {} doesnt exists'.format(vendedor_login)}, 401
+
+        if not cliente_service.cliente_le_pertenece_a_vendedor(vendedor_email=vendedor.email, cliente_id=cliente_id):
+            return {'message': 'El cliente no le pertenece al vendedor'}, 403
+
+        cliente = cliente_service.obtener_cliente_por_id(cliente_id)
+
+        return cliente.to_dict()
+
+
 class EditarCliente(Resource):
     @jwt_required
     def put(self, cliente_id):
@@ -65,6 +82,9 @@ class EditarCliente(Resource):
         vendedor = UserModel.find_by_login(vendedor_login)
         if not vendedor:
             return {'message': 'Vendedor {} doesnt exists'.format(vendedor_login)}, 401
+
+        if not cliente_service.cliente_le_pertenece_a_vendedor(vendedor_email=vendedor.email, cliente_id=cliente_id):
+            return {'message': 'El cliente no le pertenece al vendedor'}, 403
 
         data = editar_cliente_parser.parse_args()
 
@@ -93,7 +113,25 @@ class EditarCliente(Resource):
         return cliente.to_dict()
 
 
-class FindAllClientesByCorreoVendedor(Resource):
+class BorrarCliente(Resource):
+    @jwt_required
+    def delete(self, cliente_id):
+        vendedor_login = get_jwt_identity()
+
+        vendedor = UserModel.find_by_login(vendedor_login)
+        if not vendedor:
+            return {'message': 'Vendedor {} doesnt exists'.format(vendedor_login)}, 401
+
+        if not cliente_service.cliente_le_pertenece_a_vendedor(vendedor_email=vendedor.email, cliente_id=cliente_id):
+            return {'message': 'El cliente no le pertenece al vendedor'}, 403
+
+        if not cliente_service.borrar_cliente_por_id(cliente_id=cliente_id):
+            return {'message': 'Error del servidor al borrar el cliente'}, 500
+
+        return {'message': 'El cliente fue borrado exitosamente'}, 200
+
+
+class ObtenerClientesPorVendedor(Resource):
     @jwt_required
     def get(self):
         vendedor_login = get_jwt_identity()
@@ -102,12 +140,25 @@ class FindAllClientesByCorreoVendedor(Resource):
         if not vendedor:
             return {'message': 'Vendedor {} doesnt exists'.format(vendedor_login)}, 401
 
-        clientes = cliente_service.find_clientes_by_correo_vendedor(vendedor.email)
+        clientes = cliente_service.obtener_clientes_por_correo_vendedor(vendedor.email)
         return clientes
 
 
-class GetClienteById(Resource):
+class ObtenerResumenContratosPorCliente(Resource):
     @jwt_required
     def get(self, cliente_id):
-        cliente = cliente_service.get_cliente_by_id(cliente_id)
-        return cliente.to_dict()
+        vendedor_login = get_jwt_identity()
+
+        vendedor = UserModel.find_by_login(vendedor_login)
+        if not vendedor:
+            return {'message': 'Vendedor {} doesnt exists'.format(vendedor_login)}, 401
+
+        if not cliente_service.cliente_le_pertenece_a_vendedor(vendedor_email=vendedor.email, cliente_id=cliente_id):
+            return {'message': 'El cliente no le pertenece al vendedor'}, 403
+
+        try:
+            resumen_contratos = cliente_service.resumen_contratos_por_cliente(cliente_id=cliente_id)
+        except Exception as exception:
+            return {'message': 'Error del servidor al recuperar los contratos por cliente'}, 500
+
+        return resumen_contratos

@@ -19,7 +19,7 @@ def verify_cliente_exists(cliente_id: str) -> bool:
     if not cliente_id:
         return False
     try:
-        cliente = cliente_service.get_cliente_by_id(cliente_id)
+        cliente = cliente_service.obtener_cliente_por_id(cliente_id)
     except Exception:
         return False
 
@@ -68,7 +68,5 @@ def get_contrato_by_id(contrato_id: str) -> Contrato:
 
 
 def find_all_for_cliente_id(cliente_id: str) -> List[Contrato]:
-    contratos = [
-        contrato.to_dict() for contrato in Contrato.objects(clienteId=cliente_id)
-    ]
+    contratos = Contrato.objects(clienteId=cliente_id)
     return contratos
