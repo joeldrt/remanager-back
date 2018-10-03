@@ -1,11 +1,11 @@
 import mongoengine
-import datetime
+from datetime import datetime
 
 import data.mongo_digiall_utils as mongo_utils
 
 
 class ValorCampo(mongoengine.EmbeddedDocument):
-    fechaCreacion = mongoengine.DateTimeField(default=datetime.datetime.now())
+    fechaCreacion = mongoengine.DateTimeField(default=datetime.now)
 
     nombre = mongoengine.StringField()
     valor = mongoengine.StringField()
@@ -14,7 +14,7 @@ class ValorCampo(mongoengine.EmbeddedDocument):
 
 
 class Producto(mongoengine.Document):
-    fechaCreacion = mongoengine.DateTimeField(default=datetime.datetime.now())
+    fechaCreacion = mongoengine.DateTimeField(default=datetime.now)
 
     proyectoId = mongoengine.StringField()
     organizacionId = mongoengine.StringField()

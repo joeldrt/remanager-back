@@ -1,15 +1,15 @@
 import mongoengine
-import datetime
+from datetime import datetime
 
 import data.mongo_digiall_utils as mongo_utils
 
 
 class PagoReal(mongoengine.EmbeddedDocument):
-    fechaCreacion = mongoengine.DateTimeField(default=datetime.datetime.now())
+    fechaCreacion = mongoengine.DateTimeField(default=datetime.now)
     monto = mongoengine.FloatField()
-    correoQueValida = mongoengine.StringField()
-    validado = mongoengine.BooleanField()
     archivos = mongoengine.ListField(mongoengine.StringField())
+    validado = mongoengine.BooleanField()
+    correoQueValida = mongoengine.StringField()
 
 
 class PagoProgramado(mongoengine.EmbeddedDocument):
@@ -18,7 +18,7 @@ class PagoProgramado(mongoengine.EmbeddedDocument):
 
 
 class Contrato(mongoengine.Document):
-    fechaCreacion = mongoengine.DateTimeField(default=datetime.datetime.now())
+    fechaCreacion = mongoengine.DateTimeField(default=datetime.now)
 
     activo = mongoengine.BooleanField(default=True)
 
@@ -27,7 +27,7 @@ class Contrato(mongoengine.Document):
     clienteId = mongoengine.StringField()
     productoId = mongoengine.StringField()
 
-    vendedorId = mongoengine.IntField()
+    correoVendedor = mongoengine.StringField
     diasValidez = mongoengine.IntField()
 
     observaciones = mongoengine.StringField()

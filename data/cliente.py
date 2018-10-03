@@ -5,7 +5,7 @@ import data.mongo_digiall_utils as mongo_utils
 
 
 class Cliente(mongoengine.Document):
-    fechaAlta = mongoengine.DateTimeField(default=datetime.now())
+    fechaAlta = mongoengine.DateTimeField(default=datetime.now)
     organizacionId = mongoengine.StringField(required=True)
     correoVendedor = mongoengine.StringField(required=True)
     email = mongoengine.StringField(required=True)

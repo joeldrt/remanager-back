@@ -1,11 +1,11 @@
 import mongoengine
-import datetime
+from datetime import datetime
 
 import data.mongo_digiall_utils as mongo_utils
 
 
 class UserExtra(mongoengine.Document):
-    fechaAlta = mongoengine.DateTimeField(default=datetime.datetime.now())
+    fechaAlta = mongoengine.DateTimeField(default=datetime.now)
 
     login = mongoengine.StringField(unique=True)
 

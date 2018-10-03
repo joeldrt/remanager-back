@@ -9,12 +9,7 @@ from services import contrato_service, producto_service
 
 
 def crear_cliente(organizacion_id: str, correo_vendedor: str, nombre: str, apellidos: str, direccion: str,
-                  fecha_nacimiento: str, telefono: str, email: str) -> Cliente:
-
-    if fecha_nacimiento:
-        fecha_nacimiento = datetime.strptime(fecha_nacimiento, '%Y-%m-%d')
-    else:
-        fecha_nacimiento = None
+                  fecha_nacimiento: datetime, telefono: str, email: str) -> Cliente:
 
     cliente = Cliente()
     cliente.organizacionId = organizacion_id
@@ -31,19 +26,14 @@ def crear_cliente(organizacion_id: str, correo_vendedor: str, nombre: str, apell
     return cliente
 
 
-def editar_cliente(cliente_id: str, email: str, nombre: str, apellidos: str, fecha_nacimiento: str,
+def editar_cliente(cliente_id: str, email: str, nombre: str, apellidos: str, fecha_nacimiento: datetime,
                    direccion: str, telefono: str) -> Cliente:
-
-    if fecha_nacimiento:
-        fecha = datetime.strptime(fecha_nacimiento, '%Y-%m-%d')
-    else:
-        fecha = None
 
     cliente = obtener_cliente_por_id(cliente_id=cliente_id)
     cliente.email = email
     cliente.nombre = nombre
     cliente.apellidos = apellidos
-    cliente.fechaNacimiento = fecha
+    cliente.fechaNacimiento = fecha_nacimiento
     cliente.direccion = direccion
     cliente.telefono = telefono
 
@@ -60,9 +50,7 @@ def obtener_todos_los_clientes() -> List[Cliente]:
 
 
 def obtener_clientes_por_correo_vendedor(correo_vendedor: str) -> List[Cliente]:
-    clientes = [
-        cliente.to_dict() for cliente in Cliente.objects(correoVendedor=correo_vendedor)
-    ]
+    clientes = Cliente.objects(correoVendedor=correo_vendedor)
     return clientes
 
 

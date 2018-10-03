@@ -2,13 +2,15 @@ from flask_restful import Resource, reqparse
 from flask_jwt_extended import (jwt_required, get_jwt_identity)
 from services import cliente_service
 from data_auth.models import UserModel
+from datetime import datetime
+
 
 agregar_cliente_parser = reqparse.RequestParser(bundle_errors=True)
 agregar_cliente_parser.add_argument('email', required=True)
 agregar_cliente_parser.add_argument('nombre', required=True)
 agregar_cliente_parser.add_argument('apellidos')
 agregar_cliente_parser.add_argument('direccion')
-agregar_cliente_parser.add_argument('fechaNacimiento')
+agregar_cliente_parser.add_argument('fechaNacimiento', type=lambda x: datetime.strptime(x, '%Y-%m-%dT%H:%M:%S'))
 agregar_cliente_parser.add_argument('telefono', required=True)
 
 
@@ -47,16 +49,6 @@ class AgregarCliente(Resource):
         return cliente.to_dict()
 
 
-editar_cliente_parser = reqparse.RequestParser(bundle_errors=True)
-editar_cliente_parser.add_argument('id', required=True)
-editar_cliente_parser.add_argument('email', required=True)
-editar_cliente_parser.add_argument('nombre', required=True)
-editar_cliente_parser.add_argument('apellidos')
-editar_cliente_parser.add_argument('direccion')
-editar_cliente_parser.add_argument('fechaNacimiento')
-editar_cliente_parser.add_argument('telefono', required=True)
-
-
 class ObtenerClientePorId(Resource):
     @jwt_required
     def get(self, cliente_id):
@@ -72,6 +64,16 @@ class ObtenerClientePorId(Resource):
         cliente = cliente_service.obtener_cliente_por_id(cliente_id)
 
         return cliente.to_dict()
+
+
+editar_cliente_parser = reqparse.RequestParser(bundle_errors=True)
+editar_cliente_parser.add_argument('id', required=True)
+editar_cliente_parser.add_argument('email', required=True)
+editar_cliente_parser.add_argument('nombre', required=True)
+editar_cliente_parser.add_argument('apellidos')
+editar_cliente_parser.add_argument('direccion')
+editar_cliente_parser.add_argument('fechaNacimiento', type=lambda x: datetime.strptime(x, '%Y-%m-%dT%H:%M:%S'))
+editar_cliente_parser.add_argument('telefono', required=True)
 
 
 class EditarCliente(Resource):
@@ -140,7 +142,15 @@ class ObtenerClientesPorVendedor(Resource):
         if not vendedor:
             return {'message': 'Vendedor {} doesnt exists'.format(vendedor_login)}, 401
 
-        clientes = cliente_service.obtener_clientes_por_correo_vendedor(vendedor.email)
+        try:
+            clientes_objs = cliente_service.obtener_clientes_por_correo_vendedor(vendedor.email)
+
+            clientes = [
+                cliente.to_dict() for cliente in clientes_objs
+            ]
+        except Exception as exception:
+            return {'message': 'error del servidor al obtener los clientes por vendedor'}
+
         return clientes
 
 

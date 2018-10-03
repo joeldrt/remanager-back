@@ -1,5 +1,5 @@
 import mongoengine
-import datetime
+from datetime import datetime
 
 import data.mongo_digiall_utils as mongo_utils
 
@@ -17,7 +17,7 @@ class Poligono(mongoengine.EmbeddedDocument):
 
 
 class Svg(mongoengine.Document):
-    fechaAlta = mongoengine.DateTimeField(default=datetime.datetime.now())
+    fechaAlta = mongoengine.DateTimeField(default=datetime.now)
 
     nombre = mongoengine.StringField(required=True)
     imagenContentType = mongoengine.StringField()

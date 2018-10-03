@@ -1,11 +1,11 @@
 import mongoengine
-import datetime
+from datetime import datetime
 
 import data.mongo_digiall_utils as mongo_utils
 
 
 class Organizacion(mongoengine.Document):
-    fechaCreacion = mongoengine.DateTimeField(default=datetime.datetime.now())
+    fechaCreacion = mongoengine.DateTimeField(default=datetime.now)
 
     correoCreador = mongoengine.StringField()
     descripcion = mongoengine.StringField()

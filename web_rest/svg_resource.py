@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse, request
-from data.svg import Svg, Poligono, Punto
+from data.svg import Svg
 from flask_jwt_extended import (jwt_required, get_jwt_identity)
 
 parser = reqparse.RequestParser(bundle_errors=True)

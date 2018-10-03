@@ -77,12 +77,12 @@ api.add_resource(producto_resource.FindAllProductosByProyectoId, '/api/_search_b
 api.add_resource(producto_resource.GetProductoById, '/api/productos/<string:producto_id>')
 api.add_resource(producto_resource.FindAllProductos, '/api/productos/')
 
-api.add_resource(contrato_resource.AddContrato, '/api/contratos')
+api.add_resource(contrato_resource.CrearContrato, '/api/contratos')
 api.add_resource(contrato_resource.FindAllContratos, '/api/contratos/all/')
 api.add_resource(contrato_resource.GetLastContratoForProductoId, '/api/contratos/_by_producto_id/recent/<string:producto_id>')
 api.add_resource(contrato_resource.FindAllContratosForProductoId, '/api/contratos/_by_producto_id/all/<string:producto_id>')
-api.add_resource(contrato_resource.AddPagoReal, '/api/contratos/_add_pago_real/<string:contrato_id>')
-api.add_resource(contrato_resource.AddPagoProgramado, '/api/contratos/_add_pago_programado/<string:contrato_id>')
+api.add_resource(contrato_resource.AgregarPagoReal, '/api/contratos/_add_pago_real/<string:contrato_id>')
+api.add_resource(contrato_resource.AgregarPagoProgramado, '/api/contratos/_add_pago_programado/<string:contrato_id>')
 api.add_resource(contrato_resource.FindContratosForClienteId, '/api/contratos/_by_cliente_id/<string:cliente_id>')
 api.add_resource(contrato_resource.GetContratoByContratoId, '/api/contratos/_by_contrato_id/<string:contrato_id>')
 
