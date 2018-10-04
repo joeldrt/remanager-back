@@ -85,6 +85,7 @@ api.add_resource(contrato_resource.AgregarPagoReal, '/api/contratos/_add_pago_re
 api.add_resource(contrato_resource.AgregarPagoProgramado, '/api/contratos/_add_pago_programado/<string:contrato_id>')
 api.add_resource(contrato_resource.FindContratosForClienteId, '/api/contratos/_by_cliente_id/<string:cliente_id>')
 api.add_resource(contrato_resource.GetContratoByContratoId, '/api/contratos/_by_contrato_id/<string:contrato_id>')
+api.add_resource(contrato_resource.DeshabilitarContrato, '/api/contratos/_desactivar/<string:contrato_id>')
 
 api.add_resource(static_file_server.UploadFiles, '/api/file/upload')
 

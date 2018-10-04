@@ -52,6 +52,25 @@ class CrearContrato(Resource):
         return contrato.to_dict()
 
 
+class DeshabilitarContrato(Resource):
+    @jwt_required
+    def put(self, contrato_id):
+        vendedor_login = get_jwt_identity()
+
+        current_vendedor = UserModel.find_by_login(vendedor_login)
+
+        if not current_vendedor:
+            return {'message': 'No user with login {}'.format(vendedor_login)}, 401
+
+        try:
+            contrato = contrato_service.desactivar_contrato(correo_vendedor=current_vendedor.email,
+                                                            contrato_id=contrato_id)
+        except Exception as ex:
+            return {'message': str(ex)}, 500
+
+        return contrato.to_dict()
+
+
 pago_programado_parser = reqparse.RequestParser(bundle_errors=True)
 pago_programado_parser.add_argument('fechaCompromisoPago',
                                     required=True,
@@ -151,3 +170,4 @@ class GetContratoByContratoId(Resource):
         except Exception as ex:
             return {'message': str(ex)}, 500
         return contrato.to_dict()
+

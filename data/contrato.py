@@ -8,7 +8,7 @@ class PagoReal(mongoengine.EmbeddedDocument):
     fechaCreacion = mongoengine.DateTimeField(default=datetime.now)
     monto = mongoengine.FloatField()
     archivos = mongoengine.ListField(mongoengine.StringField())
-    validado = mongoengine.BooleanField()
+    validado = mongoengine.BooleanField(default=False)
     correoQueValida = mongoengine.StringField()
 
 
@@ -27,7 +27,7 @@ class Contrato(mongoengine.Document):
     clienteId = mongoengine.StringField()
     productoId = mongoengine.StringField()
 
-    correoVendedor = mongoengine.StringField
+    correoVendedor = mongoengine.StringField()
     diasValidez = mongoengine.IntField()
 
     observaciones = mongoengine.StringField()

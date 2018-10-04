@@ -1,7 +1,9 @@
 from typing import List
-from data.contrato import Contrato, PagoProgramado, PagoReal
-from datetime import datetime
+from datetime import datetime, timedelta
 
+from mongoengine import Q
+
+from data.contrato import Contrato, PagoProgramado, PagoReal
 from services import cliente_service, producto_service
 
 
@@ -39,6 +41,25 @@ def formatear_pagos_programados(pagos_programados: List[PagoProgramado]):
                                                                 '%Y-%m-%dT%H:%M:%S.%fZ')
 
 
+def desactivar_contrato(correo_vendedor: str, contrato_id: str) -> Contrato:
+    contrato = get_contrato_by_id(contrato_id=contrato_id)
+    contrato_dict = contrato.to_dict()
+    if not contrato_dict['correoVendedor'] == correo_vendedor:
+        raise Exception('El contrato no fue creado por el vendedor')
+
+    if int(contrato_dict['diasValidez']) > 0:
+        fecha_creacion = datetime.strptime(contrato_dict['fechaCreacion'],'%Y-%m-%dT%H:%M:%S.%f')
+        fecha_vencimiento = fecha_creacion + timedelta(days=int(contrato_dict['diasValidez']))
+        if fecha_vencimiento > datetime.now(): # significa que sigue vigente el contrato
+            producto = producto_service.get_producto_by_id(contrato.productoId)
+            producto.estatus = 'DISPONIBLE'
+            producto.save()
+
+    contrato.activo = False
+    contrato.save()
+    return contrato
+
+
 def generar_objeto_pago_programado(fecha_compromiso_pago: datetime, monto: float) -> PagoProgramado:
     pago_programado = PagoProgramado()
     pago_programado.fechaCompromisoPago = fecha_compromiso_pago
@@ -63,8 +84,6 @@ def generar_objeto_pago_real(monto: float, archivos: [str]) -> PagoReal:
     pago_real = PagoReal()
     pago_real.monto = monto
     pago_real.archivos = archivos
-    pago_real.validado = False
-    pago_real.correoQueValida = None
 
     return pago_real
 
@@ -125,7 +144,8 @@ def find_all_contratos() -> List[Contrato]:
 
 
 def get_last_contrato_for_producto_id(producto_id: str) -> Contrato:
-    contrato = Contrato.objects(producto_id=producto_id)[0]
+    contrato = Contrato.objects(Q(activo=True) &
+                                Q(producto_id=producto_id))[0]
     return contrato
 
 
@@ -135,10 +155,13 @@ def find_all_contratos_for_producto_id(producto_id: str) -> List[Contrato]:
 
 
 def get_contrato_by_id(contrato_id: str) -> Contrato:
-    contrato = Contrato.objects().get(id=contrato_id)
+    contrato = Contrato.objects(Q(activo=True) &
+                                Q(id=contrato_id))[0]
     return contrato
 
 
 def find_all_for_cliente_id(cliente_id: str) -> List[Contrato]:
-    contratos = Contrato.objects(clienteId=cliente_id)
+    contratos = Contrato.objects(Q(activo=True) &
+                                 Q(clienteId=cliente_id))
     return contratos
+
