@@ -72,7 +72,7 @@ editar_cliente_parser.add_argument('email', required=True)
 editar_cliente_parser.add_argument('nombre', required=True)
 editar_cliente_parser.add_argument('apellidos')
 editar_cliente_parser.add_argument('direccion')
-editar_cliente_parser.add_argument('fechaNacimiento', type=lambda x: datetime.strptime(x, '%Y-%m-%dT%H:%M:%S'))
+editar_cliente_parser.add_argument('fechaNacimiento', type=lambda x: datetime.strptime(x, '%Y-%m-%dT%H:%M:%S.%fZ'))
 editar_cliente_parser.add_argument('telefono', required=True)
 
 
