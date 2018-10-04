@@ -5,13 +5,18 @@ from datetime import datetime
 from services import cliente_service, producto_service
 
 
-def crear_contrato(tipo: str, cliente_id: str, producto_id: str, correo_vendedor: str, dias_validez: int) -> Contrato:
+def crear_contrato(tipo: str, cliente_id: str, producto_id: str, correo_vendedor: str, dias_validez: int,
+                   pagos_programados: List[PagoProgramado]) -> Contrato:
     contrato = Contrato()
     contrato.tipo = tipo
     contrato.clienteId = cliente_id
     contrato.productoId = producto_id
     contrato.correoVendedor = correo_vendedor
+    contrato.pagosProgramados = pagos_programados
     contrato.diasValidez = -1 if not dias_validez else dias_validez
+
+    if pagos_programados and len(pagos_programados) > 0:
+        formatear_pagos_programados(pagos_programados=pagos_programados)
 
     contrato.save()
 
@@ -21,11 +26,17 @@ def crear_contrato(tipo: str, cliente_id: str, producto_id: str, correo_vendedor
         contrato.delete()
         raise Exception('No se encontró el producto - se destruye el contrato')
 
-    producto.estatus = map_estatus_tipo_de_contrato(contrato.tipo)
-
-    producto.save()
+    if not contrato.tipo == 'CORRIDA':
+        producto.estatus = map_estatus_tipo_de_contrato(contrato.tipo)
+        producto.save()
 
     return contrato
+
+
+def formatear_pagos_programados(pagos_programados: List[PagoProgramado]):
+    for pago_programado in pagos_programados:
+        pago_programado.fechaCompromisoPago = datetime.strptime(pago_programado.fechaCompromisoPago,
+                                                                '%Y-%m-%dT%H:%M:%S.%fZ')
 
 
 def generar_objeto_pago_programado(fecha_compromiso_pago: datetime, monto: float) -> PagoProgramado:

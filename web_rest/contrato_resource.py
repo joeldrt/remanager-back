@@ -1,9 +1,11 @@
-from flask_restful import Resource, reqparse
+from flask_restful import Resource, reqparse, request
 from flask_jwt_extended import (jwt_required, get_jwt_identity)
 
 from data_auth.models import UserModel
 
 from services import contrato_service
+
+from data.contrato import Contrato, PagoProgramado
 
 from datetime import datetime
 
@@ -24,25 +26,26 @@ class CrearContrato(Resource):
         if not current_vendedor:
             return {'message': 'No user with login {}'.format(vendedor_login)}, 401
 
-        data = contrato_parser.parse_args()
-
-        if not contrato_service.verify_cliente_exists(data['clienteId']):
-            return {'message': 'No cliente with id {} found'.format(data['clienteId'])}, 404
-
-        if not contrato_service.verify_producto_exists(data['productoId']):
-            return {'message': 'No producto with id {} found'.format(data['productoId'])}, 404
-
-        tipo = data['tipo']
-        cliente_id = data['clienteId']
-        producto_id = data['productoId']
-        dias_validez = data['diasValidez']
+        data = request.data.decode('utf-8')
 
         try:
-            contrato = contrato_service.crear_contrato(tipo=tipo,
-                                                       cliente_id=cliente_id,
-                                                       producto_id=producto_id,
+            contrato = Contrato.from_json(data)
+        except Exception as exception:
+            return {'message', 'El objeto enviado no cumple con el formato correcto'}, 400
+
+        if not contrato_service.verify_cliente_exists(contrato.clienteId):
+            return {'message': 'No cliente with id {} found'.format(contrato.clienteId)}, 404
+
+        if not contrato_service.verify_producto_exists(contrato.productoId):
+            return {'message': 'No producto with id {} found'.format(contrato.productoId)}, 404
+
+        try:
+            contrato = contrato_service.crear_contrato(tipo=contrato.tipo,
+                                                       cliente_id=contrato.clienteId,
+                                                       producto_id=contrato.productoId,
                                                        correo_vendedor=current_vendedor.email,
-                                                       dias_validez=dias_validez)
+                                                       dias_validez=contrato.diasValidez,
+                                                       pagos_programados=contrato.pagosProgramados)
         except Exception as ex:
             return {'message': str(ex)}, 500
 
